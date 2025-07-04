@@ -1,29 +1,47 @@
-// app/api/firecrawl/route.ts
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+
+export async function POST(req: NextRequest) {
   const { url } = await req.json();
 
   if (!url) {
-    return new Response(JSON.stringify({ error: "Missing URL" }), {
-      status: 400,
-    });
+    return NextResponse.json({ error: "Missing URL" }, { status: 400 });
   }
 
-  const firecrawlRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}`, // store securely
-    },
-    body: JSON.stringify({
-      url,
-      html: false,
-      screenshot: false,
-      metadata: true,
-    }),
-  });
+  try {
+    const firecrawlRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}`,
+      },
+      body: JSON.stringify({
+        url: url, 
+        html: false, 
+        screenshot: false,
+        metadata: true, 
+      }),
+      cache: "no-store",
+    });
 
-  const data = await firecrawlRes.json();
+    const data = await firecrawlRes.json();
 
-  return Response.json(data);
+    if (!firecrawlRes.ok) {
+      console.error("Firecrawl error:", data);
+      return NextResponse.json(
+        { error: data.error || "Failed to fetch data" },
+        { status: 500 }
+      );
+    }
+
+    console.log("Firecrawl result:", data);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return NextResponse.json(
+      { error: "Server error. Try again." },
+      { status: 500 }
+    );
+  }
 }
+
