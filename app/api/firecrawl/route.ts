@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function POST(req: NextRequest) {
   const { url } = await req.json();
 
@@ -16,10 +15,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}`,
       },
       body: JSON.stringify({
-        url: url, 
-        html: false, 
-        screenshot: false,
-        metadata: true, 
+        url: url,
       }),
       cache: "no-store",
     });
@@ -44,4 +40,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

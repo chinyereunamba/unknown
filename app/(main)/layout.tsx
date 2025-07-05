@@ -1,6 +1,7 @@
 import { siteConfig } from "@/config/site";
 import { Navbar } from "@/components/navbar";
 import { Metadata, Viewport } from "next";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: {
@@ -13,18 +14,18 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-      <div className="relative flex flex-col h-screen">
-        <Navbar />
-        <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-          {children}
-        </main>
-      </div>
+    <div className="relative flex flex-col h-screen">
+      <Navbar />
+      <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 }
