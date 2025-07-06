@@ -1,9 +1,12 @@
 "use client";
 import { FormEvent, useRef, useState } from "react";
-import { Button } from "@heroui/button";
-import { Card } from "@heroui/card";
-import { Input } from "@heroui/input";
 import { useRouter } from "next/navigation";
+import { FileText, Globe, Languages } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Sun, Moon } from "lucide-react";
 
 type InputMode = "url" | "file";
 
@@ -85,11 +88,12 @@ export default function Home() {
 
         const data = await res.json();
 
-        if (data.text) {
-          localStorage.setItem("summaryText", data.text);
+        if (data.success && data.data?.markdown) {
+          localStorage.setItem("summaryText", data.data.markdown);
           router.push("/summary");
         } else {
-          alert("Failed to extract text from URL");
+          console.error("Firecrawl API error:", data);
+          alert("Failed to extract text from URL. Please try again.");
         }
       } else if (inputMode === "file") {
         // Use already-extracted preview text
@@ -108,172 +112,102 @@ export default function Home() {
     }
   };
 
+  const features = [
+    {
+      icon: <FileText className="w-8 h-8 text-primary" />,
+      title: "Summarize Documents",
+      description:
+        "Upload PDFs, DOCX, and other documents for instant AI-powered summaries.",
+    },
+    {
+      icon: <Globe className="w-8 h-8 text-primary" />,
+      title: "Summarize Websites",
+      description:
+        "Paste any URL to get concise summaries of web pages and articles.",
+    },
+    {
+      icon: <Languages className="w-8 h-8 text-primary" />,
+      title: "Translate Instantly",
+      description:
+        "Convert summaries to any language with our advanced translation engine.",
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="w-full max-w-2xl flex flex-col items-center justify-center text-center gap-8 py-16">
-          <h1 className="font-extrabold text-5xl md:text-6xl leading-tight tracking-tight mb-2">
-            Understand Any Website or Document Instantly.
-          </h1>
-          <p className="text-lg md:text-xl mb-6">
-            Choose your input method and get clarity, simplicity, and
-            action—tailored to you.
-          </p>
-
-          {/* Input Mode Selector */}
-          <div className="w-full mb-6">
-            <div className="flex bg-neutral-100 rounded-lg p-1 w-full max-w-md mx-auto">
-              <button
-                type="button"
-                onClick={() => handleModeChange("url")}
-                className={`flex-1 py-3 px-4 rounded-md font-medium transition-all ${
-                  inputMode === "url"
-                    ? "bg-white text-neutral-900 shadow-sm"
-                    : "text-neutral-600 hover:text-neutral-900"
-                }`}
-              >
-                🌐 Website URL
-              </button>
-              <button
-                type="button"
-                onClick={() => handleModeChange("file")}
-                className={`flex-1 py-3 px-4 rounded-md font-medium transition-all ${
-                  inputMode === "file"
-                    ? "bg-white text-neutral-900 shadow-sm"
-                    : "text-neutral-600 hover:text-neutral-900"
-                }`}
-              >
-                📄 Upload File
-              </button>
-            </div>
-          </div>
-
-          <form
-            onSubmit={handleSummarize}
-            className="w-full flex flex-col gap-4"
-          >
-            {inputMode === "url" ? (
-              <div className="flex w-full flex-col items-start">
-                <label className="block text-base font-medium mb-2">
-                  Website URL
-                </label>
-                <Input
-                  type="url"
-                  variant="bordered"
-                  placeholder="https://example.com"
-                  classNames={{
-                    inputWrapper: "rounded-xl p-4",
-                    input: "text-base",
-                  }}
-                  onChange={(e) => setUrl(e.target.value)}
-                  value={url}
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col items-start">
-                <label className="block text-base font-medium mb-2">
-                  Upload Document
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <div
-                  onClick={handleFileUploadClick}
-                  className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center hover:border-gray-300 transition-colors cursor-pointer w-full items-center"
-                >
-                  <div className="icon-upload text-2xl mb-2"></div>
-                  <p className="">
-                    {file
-                      ? `Selected: ${file.name}`
-                      : "Drop PDF or DOCX files here, or click to browse"}
-                  </p>
-                  <p className="text-sm mt-1">Max file size: 10MB</p>
-                </div>
-                {fileLoading && (
-                  <div className="mt-2 text-blue-600 text-sm">
-                    Extracting text from file...
-                  </div>
-                )}
-                {filePreview && !fileLoading && (
-                  <div className="mt-4 w-full bg-neutral-100 rounded p-4 text-left text-sm max-h-48 overflow-y-auto border border-neutral-200">
-                    <div className="font-semibold mb-2 text-neutral-700">
-                      Preview:
-                    </div>
-                    <div className="text-neutral-700 whitespace-pre-wrap">
-                      {filePreview.slice(0, 500)}
-                      {filePreview.length > 500 && (
-                        <span className="text-neutral-400">
-                          ... (truncated)
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              radius="full"
-              color="primary"
-              className="w-full py-4 mt-2 text-lg font-bold shadow-lg"
-              disabled={loading || fileLoading}
-            >
-              {loading ? "Processing..." : "Get My Summary"}
-            </Button>
-          </form>
+      <section className="flex-1 min-h-[70vh] flex flex-col items-center justify-center px-4">
+        {/* Background Hero Image */}
+        <div className="absolute inset-0 -z-10 opacity-5">
+          {/* <img
+            src={heroBanner}
+            alt="AI Summarization"
+            className="w-full h-full object-cover"
+          /> */}
         </div>
-      </main>
 
-      {/* How It Works Section */}
-      <section className="w-full max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 py-16 px-4">
-        <Card className="flex-1 flex flex-col items-center text-center gap-2 py-6 bg-transparent shadow-none">
-          <span className="text-5xl mb-2">🔗</span>
-          <span className="font-semibold text-lg">Paste or Upload</span>
-        </Card>
-        <Card className="flex-1 flex flex-col items-center text-center gap-2 py-6 bg-transparent shadow-none">
-          <span className="text-5xl mb-2">🤖</span>
-          <span className="font-semibold text-lg">AI Simplifies</span>
-        </Card>
-        <Card className="flex-1 flex flex-col items-center text-center gap-2 py-6 bg-transparent shadow-none">
-          <span className="text-5xl mb-2">⚡</span>
-          <span className="font-semibold text-lg">You Take Action</span>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl md:text-6xl font-bold text-center tracking-tight mb-6">
+            Transform lengthy content into{" "}
+            <span className="text-gradient">actionable insights</span>
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            AI-powered summarization for documents, web pages, and text. Save
+            time and focus on what matters most.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Button size="lg" asChild className="shadow-elegant">
+              <Link href="/input">Try for Free</Link>
+            </Button>
+            <Button variant="outline" size="lg">
+              Watch Demo
+            </Button>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="w-full py-6 mt-auto">
-        <div className="flex flex-col items-center justify-center gap-2">
-          <div className="flex gap-3 mb-2">
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              Firecrawl
-            </div>
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              Lingo
-            </div>
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              Tambo
-            </div>
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              Autumn
-            </div>
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              Resend
-            </div>
-            <div className="w-12 h-6 rounded flex items-center justify-center text-xs text-neutral-100">
-              BetterAuth
-            </div>
-          </div>
-          <div className="text-xs text-neutral-400">
-            © {new Date().getFullYear()} WebWhisper AI. All rights reserved.
-          </div>
+      {/* Features Section */}
+      <section className="px-4 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Everything you need to summarize smarter
+          </h2>
+          <p className="text-xl text-muted-foreground">
+            Powerful AI tools designed for modern productivity
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+            >
+              <Card className="p-6 h-full shadow-soft hover:shadow-elegant transition-smooth">
+                <CardContent className="p-0 text-center">
+                  <div className="mb-4 flex justify-center">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </footer>
-    </div>
+      </section>
+    </>
   );
 }

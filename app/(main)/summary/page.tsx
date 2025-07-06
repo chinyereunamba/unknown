@@ -3,6 +3,8 @@ import { Card, Button } from "@/components";
 import { Link as HeroLink } from "@heroui/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Copy } from "lucide-react";
+import { Select, SelectItem } from "@heroui/react";
 
 interface SummaryData {
   summary: string;
@@ -17,6 +19,7 @@ export default function SummaryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const router = useRouter();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const text = localStorage.getItem("summaryText");
@@ -36,7 +39,7 @@ export default function SummaryPage() {
       setError("");
 
       const response = await fetch("/api/summarize", {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           extractedText: text,
           targetLanguage: "en",
@@ -66,6 +69,13 @@ export default function SummaryPage() {
   const handleNewSummary = () => {
     localStorage.removeItem("summaryText");
     router.push("/");
+  };
+
+  const copyToClipboard = () => {
+    if (!summaryData) return;
+    navigator.clipboard.writeText(summaryData.summary);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (loading) {
@@ -115,6 +125,8 @@ export default function SummaryPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+     
+
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-4xl flex flex-col items-center justify-center text-center gap-8 py-12">
@@ -158,10 +170,29 @@ export default function SummaryPage() {
           {/* Summary Card */}
           <Card className="w-full rounded-xl shadow p-8 mb-6 text-left">
             <div className="text-lg">
-              <span className="block font-semibold mb-4 text-xl">
-                AI Summary:
-              </span>
-              <div className=" leading-relaxed whitespace-pre-wrap">
+              <div className="flex justify-between items-center gap-2 font-semibold mb-4 text-xl">
+                <p>AI Summary:</p>
+                <div className="flex gap-2 items-center">
+                  <Select placeholder="Language" className="w-32" size="sm">
+                    <SelectItem key="en">English</SelectItem>
+                    <SelectItem key="es">Spanish</SelectItem>
+                    <SelectItem key="fr">French</SelectItem>
+                    <SelectItem key="de">German</SelectItem>
+                  </Select>
+                  <span className="p-2 rounded-md hover:bg-neutral-700/90">
+                    {copied ? (
+                      <p className="text-sm font-semibold">Copied!</p>
+                    ) : (
+                      <Copy
+                        size={20}
+                        onClick={copyToClipboard}
+                        className="cursor-pointer active:scale-85"
+                      />
+                    )}
+                  </span>
+                </div>
+              </div>
+              <div className="leading-relaxed whitespace-pre-wrap">
                 {summaryData?.summary || "No summary available"}
               </div>
             </div>

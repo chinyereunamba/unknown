@@ -2,7 +2,7 @@
 import AuthForm from "@/components/form";
 import { Zap } from "lucide-react";
 import { useState } from "react";
-import { Button, Link } from "@/components";
+
 
 interface Credentials {
   email: string;
@@ -34,26 +34,10 @@ export default function AuthPage() {
     >
       <div className="min-h-screen flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Zap />
-              </div>
-              <span className="text-2xl font-bold">WebWhisper AI</span>
-            </div>
+          <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mb-4">
+            <span className="text-primary font-bold text-lg">S</span>
           </div>
-
-          <AuthForm
-            isSignUp={isSignUp}
-            onToggleMode={toggleMode}
-            onSubmit={handleAuth}
-          />
-
-          <div className="mt-8 text-center">
-            <Button as={Link} href="/" variant="shadow" className="text-sm">
-              ← Back to Home
-            </Button>
-          </div>
+          <AuthForm onToggleMode={toggleMode} onSubmit={handleAuth} />
         </div>
       </div>
     </div>

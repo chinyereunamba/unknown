@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Firecrawl result:", data);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Unexpected error:", error);
