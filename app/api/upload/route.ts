@@ -19,19 +19,21 @@ export async function POST(req: NextRequest) {
       "application/msword",
       // "application/vnd.oasis.opendocument.text",
     ];
+
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         { error: "Invalid file type. Only PDF and DOCX files are allowed." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check file size (10MB limit)
     const maxSize = 10 * 1024 * 1024; // 10MB
+
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: "File too large. Maximum size is 10MB." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -59,6 +61,7 @@ export async function POST(req: NextRequest) {
 
     if (file.type === "application/pdf") {
       const pdfData = await PdfParse(buffer);
+
       extractedText = pdfData.text;
     } else if (
       file.type ===
@@ -66,6 +69,7 @@ export async function POST(req: NextRequest) {
       file.type === "application/msword"
     ) {
       const result = await mammoth.extractRawText({ buffer });
+
       extractedText = result.value;
     } else {
       extractedText = "Unsupported file type for extraction.";
@@ -83,9 +87,10 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("File upload error:", error);
+
     return NextResponse.json(
       { error: "Failed to process file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

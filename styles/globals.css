@@ -39,6 +39,7 @@ All colors MUST be HSL. Geist font. Soft blue accent (#3B82F6).
     --ring: 221 83% 53%;
 
     /* Custom Design Tokens */
+
     --gradient-primary: linear-gradient(
       135deg,
       hsl(var(--primary)),

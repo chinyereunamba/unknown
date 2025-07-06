@@ -1,5 +1,7 @@
-'use client'
+"use client";
 import { motion } from "framer-motion";
+import { Check, Crown, Zap } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import DashboardLayout from "@/components/DashboardLayout";
-import { Check, Crown, Zap } from "lucide-react";
 
 const BillingPage = () => {
   const plans = [
@@ -63,8 +63,8 @@ const BillingPage = () => {
     <>
       <div className="p-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
           <div className="mb-8">
@@ -114,8 +114,8 @@ const BillingPage = () => {
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.name}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
               >
                 <Card
@@ -167,6 +167,7 @@ const BillingPage = () => {
 
                     <Button
                       className="w-full"
+                      disabled={plan.current}
                       variant={
                         plan.current
                           ? "secondary"
@@ -174,7 +175,6 @@ const BillingPage = () => {
                             ? "default"
                             : "outline"
                       }
-                      disabled={plan.current}
                     >
                       {plan.current
                         ? "Current Plan"
@@ -188,10 +188,10 @@ const BillingPage = () => {
 
           {/* Payment Methods */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <Card className="shadow-soft">
               <CardHeader>
@@ -219,7 +219,7 @@ const BillingPage = () => {
                     <Badge variant="secondary">Primary</Badge>
                   </div>
 
-                  <Button variant="outline" className="w-full">
+                  <Button className="w-full" variant="outline">
                     Add Payment Method
                   </Button>
                 </div>

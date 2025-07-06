@@ -6,7 +6,6 @@ import { SwitchProps, useSwitch } from "@heroui/switch";
 import { useTheme } from "next-themes";
 import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
-
 import { Moon, Sun } from "lucide-react";
 
 export interface ThemeSwitchProps {
@@ -70,11 +69,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
           ),
         })}
       >
-        {!isSelected || isSSR ? (
-          <Sun size={22} />
-        ) : (
-          <Moon size={22} />
-        )}
+        {!isSelected || isSSR ? <Sun size={22} /> : <Moon size={22} />}
       </div>
     </Component>
   );

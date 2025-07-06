@@ -1,36 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { lingo } from "@/lib/lingo";
 
 export async function POST(req: NextRequest) {
+  const { text, targetLocale, sourceLocale = null } = await req.json();
+
+  if (!text || !targetLocale) {
+    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+  }
+
   try {
-    const { text, targetLanguage } = await req.json();
-
-    if (!text || !targetLanguage) {
-      return NextResponse.json({ error: "Missing text or language" }, { status: 400 });
-    }
-
-    const response = await fetch("https://api.lingo.dev/v1/translate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.LINGODOTDEV_API_KEY}`,
-      },
-      body: JSON.stringify({
-        text,
-        target_language: targetLanguage, // e.g., "fr" or "es"
-      }),
+    const result = await lingo.localizeText(text, {
+      sourceLocale,
+      targetLocale,
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      return NextResponse.json({ error: "Translation failed", details: error }, { status: 500 });
-    }
-
-    const result = await response.json();
-    const translatedText = result.translated_text;
-
-    return NextResponse.json({ translatedText });
+    return NextResponse.json({ translatedText: result });
   } catch (error) {
     console.error("Translation error:", error);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Translation failed" }, { status: 500 });
   }
 }

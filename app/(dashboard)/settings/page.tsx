@@ -1,14 +1,26 @@
-'use client'import { motion } from "framer-motion";
+"use client";
+import { motion } from "framer-motion";
 import { useState } from "react";
+import { User, Bell, Globe, Shield, Moon, Sun, Monitor } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import DashboardLayout from "@/components/DashboardLayout";
-import { User, Bell, Globe, Shield, Moon, Sun, Monitor } from "lucide-react";
 
 const SettingsPage = () => {
   const [name, setName] = useState("Alex Johnson");
@@ -44,7 +56,7 @@ const SettingsPage = () => {
           </div>
           <Button>Save Changes</Button>
         </div>
-      )
+      ),
     },
     {
       icon: <Globe className="w-5 h-5" />,
@@ -80,7 +92,7 @@ const SettingsPage = () => {
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-2">
             <Label>Default Translation Language</Label>
             <Select value={language} onValueChange={setLanguage}>
@@ -97,7 +109,7 @@ const SettingsPage = () => {
             </Select>
           </div>
         </div>
-      )
+      ),
     },
     {
       icon: <Bell className="w-5 h-5" />,
@@ -117,7 +129,7 @@ const SettingsPage = () => {
               onCheckedChange={setEmailNotifications}
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Push Notifications</Label>
@@ -131,7 +143,7 @@ const SettingsPage = () => {
             />
           </div>
         </div>
-      )
+      ),
     },
     {
       icon: <Shield className="w-5 h-5" />,
@@ -139,63 +151,60 @@ const SettingsPage = () => {
       description: "Manage your account security",
       content: (
         <div className="space-y-4">
-          <Button variant="outline" className="w-full justify-start">
+          <Button className="w-full justify-start" variant="outline">
             Change Password
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button className="w-full justify-start" variant="outline">
             Two-Factor Authentication
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button className="w-full justify-start" variant="outline">
             Active Sessions
           </Button>
-          <Separator />
-          <Button variant="destructive" className="w-full">
+          <Button className="w-fit" variant="destructive">
             Delete Account
           </Button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
-    <DashboardLayout>
-      <div className="p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold">Settings</h1>
-            <p className="text-muted-foreground">Manage your account and application preferences</p>
-          </div>
+    <div className="p-6">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Settings</h1>
+          <p className="text-muted-foreground">
+            Manage your account and application preferences
+          </p>
+        </div>
 
-          <div className="space-y-6">
-            {settingsSections.map((section, index) => (
-              <motion.div
-                key={section.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
-              >
-                <Card className="shadow-soft">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-3">
-                      {section.icon}
-                      <span>{section.title}</span>
-                    </CardTitle>
-                    <CardDescription>{section.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {section.content}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </DashboardLayout>
+        <div className="space-y-6">
+          {settingsSections.map((section, index) => (
+            <motion.div
+              key={section.title}
+              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
+            >
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3">
+                    {section.icon}
+                    <span>{section.title}</span>
+                  </CardTitle>
+                  <CardDescription>{section.description}</CardDescription>
+                </CardHeader>
+                <CardContent>{section.content}</CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

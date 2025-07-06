@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { FileText, Globe, Languages } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sun, Moon } from "lucide-react";
 
 type InputMode = "url" | "file";
 
@@ -22,6 +22,7 @@ export default function Home() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
+
     if (selectedFile) {
       setFile(selectedFile);
       setFilePreview("");
@@ -29,12 +30,14 @@ export default function Home() {
       // Immediately upload and extract
       try {
         const formData = new FormData();
+
         formData.append("file", selectedFile);
         const res = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
         const data = await res.json();
+
         if (data.text) {
           setFilePreview(data.text);
         } else {
@@ -68,11 +71,13 @@ export default function Home() {
 
     if (inputMode === "url" && !url) {
       alert("Please enter a website URL");
+
       return;
     }
 
     if (inputMode === "file" && !file) {
       alert("Please upload a file");
+
       return;
     }
 
@@ -147,10 +152,10 @@ export default function Home() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
           className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl md:text-6xl font-bold text-center tracking-tight mb-6">
             Transform lengthy content into{" "}
@@ -161,10 +166,10 @@ export default function Home() {
             time and focus on what matters most.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Button size="lg" asChild className="shadow-elegant">
+            <Button asChild className="shadow-elegant" size="lg">
               <Link href="/input">Try for Free</Link>
             </Button>
-            <Button variant="outline" size="lg">
+            <Button size="lg" variant="outline">
               Watch Demo
             </Button>
           </div>
@@ -174,10 +179,10 @@ export default function Home() {
       {/* Features Section */}
       <section className="px-4 py-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
           className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Everything you need to summarize smarter
@@ -191,8 +196,8 @@ export default function Home() {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
             >
               <Card className="p-6 h-full shadow-soft hover:shadow-elegant transition-smooth">

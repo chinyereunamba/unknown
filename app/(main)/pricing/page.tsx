@@ -1,5 +1,6 @@
-import { Button, Card } from "@/components/";
 import { Check } from "lucide-react";
+
+import { Button, Card } from "@/components/";
 
 export default function PricingPage() {
   const plans = [
@@ -42,8 +43,8 @@ export default function PricingPage() {
   return (
     <div
       className="min-h-screen"
-      data-name="pricing-page"
       data-file="pages/PricingPage.js"
+      data-name="pricing-page"
     >
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
@@ -88,9 +89,7 @@ export default function PricingPage() {
                 </ul>
               </div>
 
-              <Button
-                className={`w-full ${plan.popular ? "btn-primary" : ""}`}
-              >
+              <Button className={`w-full ${plan.popular ? "btn-primary" : ""}`}>
                 Get Started
               </Button>
             </Card>

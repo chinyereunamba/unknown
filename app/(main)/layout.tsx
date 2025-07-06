@@ -1,6 +1,7 @@
+import { Metadata } from "next";
+
 import { siteConfig } from "@/config/site";
 import { Navbar } from "@/components/navbar";
-import { Metadata, Viewport } from "next";
 import Footer from "@/components/footer";
 
 export const metadata: Metadata = {

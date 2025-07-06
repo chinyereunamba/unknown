@@ -1,5 +1,8 @@
-'use client'
+"use client";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { FileText, Globe, Plus, TrendingUp } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,9 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import DashboardLayout from "@/components/DashboardLayout";
-import Link from "next/link";
-import { FileText, Globe, Plus, TrendingUp } from "lucide-react";
 
 const DashboardPage = async () => {
   const stats = [
@@ -49,8 +49,8 @@ const DashboardPage = async () => {
     <>
       <div className="p-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
           {/* Header */}
@@ -66,8 +66,8 @@ const DashboardPage = async () => {
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.title}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
               >
                 <Card className="shadow-soft">
@@ -91,8 +91,8 @@ const DashboardPage = async () => {
 
           {/* Quick Actions */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <Card className="shadow-soft">
@@ -110,13 +110,13 @@ const DashboardPage = async () => {
                       New Summary
                     </Link>
                   </Button>
-                  <Button variant="outline" asChild className="flex-1">
+                  <Button asChild className="flex-1" variant="outline">
                     <Link href="/summaries">
                       <FileText className="w-4 h-4 mr-2" />
                       View All Summaries
                     </Link>
                   </Button>
-                  <Button variant="outline" asChild className="flex-1">
+                  <Button asChild className="flex-1" variant="outline">
                     <Link href="/billing">
                       <TrendingUp className="w-4 h-4 mr-2" />
                       Upgrade Plan
@@ -129,10 +129,10 @@ const DashboardPage = async () => {
 
           {/* Recent Activity */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
             className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
           >
             <Card className="shadow-soft">
               <CardHeader>
@@ -161,7 +161,7 @@ const DashboardPage = async () => {
                       className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        <div className="w-2 h-2 bg-primary rounded-full" />
                         <div>
                           <p className="font-medium">{item.title}</p>
                           <p className="text-sm text-muted-foreground">

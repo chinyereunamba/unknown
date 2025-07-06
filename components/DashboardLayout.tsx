@@ -1,6 +1,15 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Home,
+  FileText,
+  Globe,
+  CreditCard,
+  Settings,
+  LogOut,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -15,15 +24,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Home,
-  FileText,
-  Globe,
-  CreditCard,
-  Settings,
-  LogOut,
-  Menu,
-} from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -39,26 +40,38 @@ const navigation = [
 
 const DashboardSidebar = () => {
   const location = usePathname();
+  const router = useRouter();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const { data: session } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut();
+      router.push("/login");
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
+  };
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarTrigger className="m-2 self-end" />
-
-      <SidebarContent>
+      <SidebarContent className="">
         {/* Logo */}
-        <div className="p-4 border-b">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">
-                S
-              </span>
-            </div>
-            {!isCollapsed && (
-              <span className="text-gradient font-semibold">SummaryAI</span>
-            )}
-          </Link>
+        <div className="p-4 border-b flex items-center justify-between">
+          <span>
+            <Link className="flex items-center space-x-2" href="/dashboard">
+              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">
+                  S
+                </span>
+              </div>
+              {!isCollapsed && (
+                <span className="text-gradient font-semibold">SummaryAI</span>
+              )}
+            </Link>
+          </span>
+          <SidebarTrigger className="m-2 self-end" />
         </div>
 
         <SidebarGroup>
@@ -67,16 +80,17 @@ const DashboardSidebar = () => {
             <SidebarMenu>
               {navigation.map((item) => {
                 const isActive = location === item.href;
+
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild>
                       <Link
-                        href={item.href}
                         className={`${
                           isActive
                             ? "bg-primary text-primary-foreground"
                             : "hover:bg-muted"
                         } transition-smooth`}
+                        href={item.href}
                       >
                         <item.icon className="w-4 h-4" />
                         {!isCollapsed && <span>{item.name}</span>}
@@ -91,9 +105,11 @@ const DashboardSidebar = () => {
 
         {/* Logout */}
         <div className="mt-auto p-4 border-t">
+          {session?.user.name}
           <Button
-            variant="ghost"
             className="w-full justify-start text-muted-foreground hover:text-foreground"
+            size="icon"
+            onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4" />
             {!isCollapsed && <span className="ml-2">Logout</span>}
@@ -109,7 +125,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <main className="container mx-auto flex-1 bg-background overflow-auto">
+        <main className="max-w-7xl mx-auto flex-1 bg-background overflow-auto">
           {children}
         </main>
       </div>

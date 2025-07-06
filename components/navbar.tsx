@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -7,17 +8,27 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Button } from "@/components/ui/button";
 import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, Logo } from "@/components/icons";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Navbar = () => {
+  const { language, setLanguage } = useLanguage();
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -56,9 +67,39 @@ export const Navbar = () => {
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <Button className="text-sm font-normal" asChild variant="default">
+          {/* {session ? (
+            <div>
+              <p>{session?.user.name}</p>
+              <Button className="text-sm font-normal" variant={"secondary"}>
+                Dashboard
+              </Button>
+            </div>
+          ) : (
+            <Button asChild className="text-sm font-normal" variant="default">
+              <Link href={siteConfig.links.login}>Get started</Link>
+            </Button>
+          )}*/}
+          <Button asChild className="text-sm font-normal" variant="default">
             <Link href={siteConfig.links.login}>Get started</Link>
           </Button>
+        </NavbarItem>
+
+        <NavbarItem>
+          <div className="flex gap-4 items-center">
+            <Select>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="es">Spanish</SelectItem>
+                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="german">German</SelectItem>
+                <SelectItem value="italian">Italian</SelectItem>
+                <SelectItem value="portuguese">Portuguese</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </NavbarItem>
       </NavbarContent>
 

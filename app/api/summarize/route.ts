@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const requestData: SummarizeRequest = await req.json();
+
     extractedText = requestData.extractedText;
     role = requestData.role || "business_user";
 
@@ -32,36 +33,38 @@ export async function POST(req: NextRequest) {
       deu: "de",
       spa: "es",
     };
+
     targetLanguage = langMap[langCode] || "en";
 
     // Input validation
     if (!extractedText || typeof extractedText !== "string") {
       return NextResponse.json(
         { error: "Missing or invalid extractedText parameter" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (extractedText.trim().length === 0) {
       return NextResponse.json(
         { error: "Extracted text cannot be empty" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (extractedText.length > 5000) {
       return NextResponse.json(
         { error: "Text too long. Maximum 5,000 characters allowed." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check if OpenRouter API key is configured
     if (!process.env.OPENROUTER_API_KEY) {
       console.error("OPENROUTER_API_KEY not configured");
+
       return NextResponse.json(
         { error: "Summarization service not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -108,11 +111,12 @@ export async function POST(req: NextRequest) {
           temperature: 0.3,
           stream: false,
         }),
-      }
+      },
     );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+
       console.error("OpenRouter API error:", response.status, errorData);
 
       return NextResponse.json(
@@ -120,7 +124,7 @@ export async function POST(req: NextRequest) {
           error: "Failed to generate summary",
           details: errorData.error?.message || `HTTP ${response.status}`,
         },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -130,7 +134,7 @@ export async function POST(req: NextRequest) {
     if (!summary) {
       return NextResponse.json(
         { error: "No summary generated from the API" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -138,7 +142,7 @@ export async function POST(req: NextRequest) {
     const originalLength = extractedText.length;
     const summaryLength = summary.length;
     const reductionPercentage = Math.round(
-      ((originalLength - summaryLength) / originalLength) * 100
+      ((originalLength - summaryLength) / originalLength) * 100,
     );
 
     const responseData: SummarizeResponse = {
@@ -149,7 +153,7 @@ export async function POST(req: NextRequest) {
     };
 
     console.log(
-      `AI Summarization completed: ${originalLength} → ${summaryLength} chars (${reductionPercentage}% reduction)`
+      `AI Summarization completed: ${originalLength} → ${summaryLength} chars (${reductionPercentage}% reduction)`,
     );
 
     return NextResponse.json(responseData);
@@ -166,7 +170,7 @@ export async function POST(req: NextRequest) {
         error: "Internal server error during summarization",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

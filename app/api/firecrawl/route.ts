@@ -24,18 +24,20 @@ export async function POST(req: NextRequest) {
 
     if (!firecrawlRes.ok) {
       console.error("Firecrawl error:", data);
+
       return NextResponse.json(
         { error: data.error || "Failed to fetch data" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json(data);
   } catch (error) {
     console.error("Unexpected error:", error);
+
     return NextResponse.json(
       { error: "Server error. Try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

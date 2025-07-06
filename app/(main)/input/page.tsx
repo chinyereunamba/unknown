@@ -1,6 +1,8 @@
 "use client";
 import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Upload, Globe, FileText } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +14,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Globe, FileText } from "lucide-react";
 
 type InputMode = "url" | "file";
 
@@ -28,6 +29,7 @@ export default function InputPage() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
+
     if (selectedFile) {
       setFile(selectedFile);
       setFilePreview("");
@@ -35,12 +37,14 @@ export default function InputPage() {
       // Immediately upload and extract
       try {
         const formData = new FormData();
+
         formData.append("file", selectedFile);
         const res = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
         const data = await res.json();
+
         if (data.text) {
           setFilePreview(data.text);
         } else {
@@ -63,11 +67,13 @@ export default function InputPage() {
 
     if (inputMode === "url" && !url) {
       alert("Please enter a website URL");
+
       return;
     }
 
     if (inputMode === "file" && !file) {
       alert("Please upload a file");
+
       return;
     }
 
@@ -121,49 +127,49 @@ export default function InputPage() {
           </CardHeader>
           <CardContent>
             <Tabs
+              className="w-full"
               value={inputMode}
               onValueChange={(value) => setInputMode(value as InputMode)}
-              className="w-full"
             >
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="url" className="flex items-center gap-2">
+                <TabsTrigger className="flex items-center gap-2" value="url">
                   <Globe className="w-4 h-4" />
                   Website URL
                 </TabsTrigger>
-                <TabsTrigger value="file" className="flex items-center gap-2">
+                <TabsTrigger className="flex items-center gap-2" value="file">
                   <FileText className="w-4 h-4" />
                   Upload File
                 </TabsTrigger>
               </TabsList>
 
-              <form onSubmit={handleSummarize} className="mt-6 space-y-4">
-                <TabsContent value="url" className="space-y-4">
+              <form className="mt-6 space-y-4" onSubmit={handleSummarize}>
+                <TabsContent className="space-y-4" value="url">
                   <div className="space-y-2">
                     <Label htmlFor="url">Website URL</Label>
                     <Input
+                      className="w-full"
                       id="url"
-                      type="url"
                       placeholder="https://example.com"
+                      type="url"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
-                      className="w-full"
                     />
                   </div>
                 </TabsContent>
 
-                <TabsContent value="file" className="space-y-4">
+                <TabsContent className="space-y-4" value="file">
                   <div className="space-y-2">
                     <Label>Upload Document</Label>
                     <input
-                      type="file"
-                      accept=".pdf,.doc,.docx"
                       ref={fileInputRef}
-                      onChange={handleFileChange}
+                      accept=".pdf,.doc,.docx"
                       className="hidden"
+                      type="file"
+                      onChange={handleFileChange}
                     />
                     <div
-                      onClick={handleFileUploadClick}
                       className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                      onClick={handleFileUploadClick}
                     >
                       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                       <p className="text-sm text-gray-600">
@@ -197,10 +203,10 @@ export default function InputPage() {
                 </TabsContent>
 
                 <Button
-                  type="submit"
                   className="w-full"
-                  size="lg"
                   disabled={loading || fileLoading}
+                  size="lg"
+                  type="submit"
                 >
                   {loading ? "Processing..." : "Get My Summary"}
                 </Button>
