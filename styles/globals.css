@@ -110,12 +110,12 @@ All colors MUST be HSL. Geist font. Soft blue accent (#3B82F6).
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -155,5 +155,17 @@ All colors MUST be HSL. Geist font. Soft blue accent (#3B82F6).
 
   .transition-smooth {
     transition: var(--transition-smooth);
+  }
+}
+
+/* ---break---
+*/
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

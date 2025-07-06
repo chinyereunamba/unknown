@@ -1,10 +1,37 @@
 "use client";
-import { Card, Button } from "@/components";
-import { Link as HeroLink } from "@heroui/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Copy } from "lucide-react";
-import { Select, SelectItem } from "@heroui/react";
+import {
+  ChevronDown,
+  Copy,
+  Download,
+  Languages,
+  FileText,
+  BarChart3,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { motion } from "framer-motion";
 
 interface SummaryData {
   summary: string;
@@ -16,6 +43,9 @@ interface SummaryData {
 export default function SummaryPage() {
   const [extractedText, setExtractedText] = useState<string>("");
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+
+  const [isOriginalOpen, setIsOriginalOpen] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState("spanish");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const router = useRouter();
@@ -84,7 +114,7 @@ export default function SummaryPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-lg mb-2">Generating your summary...</p>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted-foreground">
             This may take a few moments
           </p>
         </div>
@@ -98,21 +128,17 @@ export default function SummaryPage() {
         <div className="text-center max-w-md">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold mb-4">Summarization Failed</h2>
-          <p className="text-neutral-600 mb-6">{error}</p>
+          <p className="text-muted-foreground mb-6">{error}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               onClick={() => summarizeText(extractedText)}
-              color="primary"
-              variant="solid"
               className="font-semibold"
             >
               Try Again
             </Button>
             <Button
-              as={HeroLink}
-              href="/"
-              color="default"
-              variant="bordered"
+              variant="outline"
+              onClick={() => router.push("/")}
               className="font-semibold"
             >
               Start Over
@@ -125,128 +151,219 @@ export default function SummaryPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-     
-
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="w-full max-w-4xl flex flex-col items-center justify-center text-center gap-8 py-12">
+      <main className="flex-1 flex flex-col items-center justify-center container mx-auto px-4 py-12 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-4xl flex flex-col items-center justify-center text-center gap-8 py-12"
+        >
           <h1 className="font-extrabold text-4xl md:text-5xl mb-2">
             Here's Your Summary
           </h1>
-          <p className="text-lg text-neutral-500 mb-6">
+          <p className="text-lg text-muted-foreground mb-6">
             We've simplified the content for you—see the key points below.
           </p>
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold mb-2">
+              Summary <span className="text-gradient">Generated</span>
+            </h1>
+            <p className="text-muted-foreground">
+              Your document has been successfully summarized
+            </p>
+          </div>
 
           {/* Summary Statistics */}
           {summaryData && (
-            <Card className="w-full rounded-xl shadow p-6 mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+            >
+              <Card className="text-center shadow-soft">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-primary">
                     {summaryData.originalLength.toLocaleString()}
                   </div>
-                  <div className="text-sm text-neutral-500">
-                    Original Characters
+                  <div className="text-sm text-muted-foreground">
+                    Original Words
                   </div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-green-600">
+                </CardContent>
+              </Card>
+              <Card className="text-center shadow-soft">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-primary">
                     {summaryData.summaryLength.toLocaleString()}
                   </div>
-                  <div className="text-sm text-neutral-500">
-                    Summary Characters
+                  <div className="text-sm text-muted-foreground">
+                    Summary Words
                   </div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-purple-600">
+                </CardContent>
+              </Card>
+              <Card className="text-center shadow-soft">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-green-600">
                     {summaryData.reductionPercentage}%
                   </div>
-                  <div className="text-sm text-neutral-500">Reduction</div>
-                </div>
-              </div>
-            </Card>
+                  <div className="text-sm text-muted-foreground">Reduction</div>
+                </CardContent>
+              </Card>
+              <Card className="text-center shadow-soft">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-primary">
+                    {/* {stats.readingTime} */}2 mins
+                    {/* TODO: Calculate reading time */}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Reading Time
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           )}
 
           {/* Summary Card */}
-          <Card className="w-full rounded-xl shadow p-8 mb-6 text-left">
-            <div className="text-lg">
-              <div className="flex justify-between items-center gap-2 font-semibold mb-4 text-xl">
-                <p>AI Summary:</p>
-                <div className="flex gap-2 items-center">
-                  <Select placeholder="Language" className="w-32" size="sm">
-                    <SelectItem key="en">English</SelectItem>
-                    <SelectItem key="es">Spanish</SelectItem>
-                    <SelectItem key="fr">French</SelectItem>
-                    <SelectItem key="de">German</SelectItem>
-                  </Select>
-                  <span className="p-2 rounded-md hover:bg-neutral-700/90">
-                    {copied ? (
-                      <p className="text-sm font-semibold">Copied!</p>
-                    ) : (
-                      <Copy
-                        size={20}
-                        onClick={copyToClipboard}
-                        className="cursor-pointer active:scale-85"
-                      />
-                    )}
-                  </span>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mb-8"
+          >
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5 text-primary" />
+                  <span>AI-Generated Summary</span>
+                  <Badge className="ml-auto">Ready</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Condensed version highlighting the key points
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="p-6 bg-gradient-subtle text-lg leading-relaxed rounded-lg border-l-4 border-l-primary">
+                  {summaryData?.summary || "No summary available"}
                 </div>
-              </div>
-              <div className="leading-relaxed whitespace-pre-wrap">
-                {summaryData?.summary || "No summary available"}
-              </div>
-            </div>
-          </Card>
+
+                <Separator className="my-6" />
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex items-center space-x-2 flex-1">
+                    <Languages className="w-4 h-4 text-muted-foreground" />
+                    <Select
+                      value={targetLanguage}
+                      onValueChange={setTargetLanguage}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Translate to..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="spanish">Spanish</SelectItem>
+                        <SelectItem value="french">French</SelectItem>
+                        <SelectItem value="german">German</SelectItem>
+                        <SelectItem value="italian">Italian</SelectItem>
+                        <SelectItem value="portuguese">Portuguese</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button variant="outline">Translate</Button>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={copyToClipboard}
+                      variant="ghost"
+                      size="sm"
+                      className="p-2"
+                    >
+                      {copied ? (
+                        <span className="text-sm font-semibold">Copied!</span>
+                      ) : (
+                        <Copy size={20} />
+                      )}
+                    </Button>
+                    <Button variant="outline">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Original Text Preview */}
-          <Card className="w-full rounded-xl shadow p-6 mb-6">
-            <div className="">
-              <span className="block font-semibold mb-4 text-lg">
-                Original Text Preview:
-              </span>
-              <div className="leading-relaxed whitespace-pre-wrap text-sm max-h-32 overflow-y-auto">
-                {extractedText.slice(0, 300)}
-                {extractedText.length > 300 && (
-                  <span className="text-neutral-400">... (truncated)</span>
-                )}
-              </div>
-            </div>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8"
+          >
+            <Card className="shadow-soft">
+              <Collapsible
+                open={isOriginalOpen}
+                onOpenChange={setIsOriginalOpen}
+              >
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer hover:bg-muted/50 transition-smooth">
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <FileText className="w-5 h-5" />
+                        <span>Original Text</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-5 h-5 transition-transform ${isOriginalOpen ? "rotate-180" : ""}`}
+                      />
+                    </CardTitle>
+                    <CardDescription>
+                      Click to view the original document content
+                    </CardDescription>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-0">
+                    <div className="p-4 bg-muted/30 rounded-lg text-sm leading-relaxed">
+                      {extractedText.slice(0, 300)}
+                      {extractedText.length > 300 && (
+                        <span className="text-muted-foreground">
+                          ... (truncated)
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+          </motion.div>
 
           {/* Action Steps Card */}
-          <Card className="w-full rounded-xl shadow p-8 mb-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold mb-4">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="text-center">
                 What would you like to do next?
-              </h3>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  as={HeroLink}
-                  href="/"
-                  color="primary"
-                  variant="solid"
+                  onClick={() => router.push("/input")}
                   className="font-semibold"
                 >
                   Create New Summary
                 </Button>
-                <Button
-                  color="default"
-                  variant="bordered"
-                  className="font-semibold"
-                >
+                <Button variant="outline" className="font-semibold">
                   Save Summary
                 </Button>
-                <Button
-                  color="default"
-                  variant="bordered"
-                  className="font-semibold"
-                >
+                <Button variant="outline" className="font-semibold">
                   Share Summary
                 </Button>
               </div>
-            </div>
+            </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </main>
     </div>
   );

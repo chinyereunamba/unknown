@@ -35,12 +35,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body
-        className={clsx(
-          "font-sans antialiased",
-          fontSans.variable
-        )}
-      >
+      <body className={clsx("font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "system" }}>
           <div className="">{children}</div>
         </Providers>

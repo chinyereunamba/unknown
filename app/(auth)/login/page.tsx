@@ -2,7 +2,7 @@
 import AuthForm from "@/components/form";
 import { Zap } from "lucide-react";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 
 interface Credentials {
   email: string;
@@ -11,6 +11,7 @@ interface Credentials {
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const router = useRouter();
 
   const handleAuth = async (credentials: Credentials) => {
     // Simulate authentication
@@ -20,6 +21,16 @@ export default function AuthPage() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Redirect to home page after successful authentication
+    router.push("/");
+  };
+
+  const handleGoogleAuth = async () => {
+    try {
+      // Redirect to Better Auth's Google sign-in
+      window.location.href = "/api/auth/signin/google";
+    } catch (error) {
+      console.error("Google authentication error:", error);
+    }
   };
 
   const toggleMode = () => {
@@ -37,7 +48,11 @@ export default function AuthPage() {
           <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mb-4">
             <span className="text-primary font-bold text-lg">S</span>
           </div>
-          <AuthForm onToggleMode={toggleMode} onSubmit={handleAuth} />
+          <AuthForm 
+            onToggleMode={toggleMode} 
+            onSubmit={handleAuth}
+            onGoogleAuth={handleGoogleAuth}
+          />
         </div>
       </div>
     </div>

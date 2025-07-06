@@ -7,7 +7,7 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Button } from "@heroui/button";
+import { Button } from "@/components/ui/button";
 import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
@@ -15,13 +15,9 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-  Logo,
-} from "@/components/icons";
+import { GithubIcon, Logo } from "@/components/icons";
 
 export const Navbar = () => {
-
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -60,13 +56,8 @@ export const Navbar = () => {
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <Button
-            as={Link}
-            className="text-sm font-normal"
-            href={siteConfig.links.login}
-            variant="solid"
-          >
-            Get started
+          <Button className="text-sm font-normal" asChild variant="default">
+            <Link href={siteConfig.links.login}>Get started</Link>
           </Button>
         </NavbarItem>
       </NavbarContent>
