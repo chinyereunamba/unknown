@@ -24,7 +24,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOut, useSession } from "next-auth/react";
+import { signOut, authClient } from "@/lib/auth-client";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -43,7 +43,7 @@ const DashboardSidebar = () => {
   const router = useRouter();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
 
   const handleSignOut = async () => {
     try {
@@ -61,13 +61,13 @@ const DashboardSidebar = () => {
         <div className="p-4 border-b flex items-center justify-between">
           <span>
             <Link className="flex items-center space-x-2" href="/dashboard">
-              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">
                   S
                 </span>
               </div>
               {!isCollapsed && (
-                <span className="text-gradient font-semibold">SummaryAI</span>
+                <span className="text-gradient font-semibold">Summarise</span>
               )}
             </Link>
           </span>
@@ -104,15 +104,15 @@ const DashboardSidebar = () => {
         </SidebarGroup>
 
         {/* Logout */}
-        <div className="mt-auto p-4 border-t">
-          {session?.user?.name || "no name"}
+        <div className="mt-auto p-4 border-t flex flex-col gap-2">
+          {session?.user?.name || "Alex Jones"}
           <Button
-            className="w-full justify-start text-muted-foreground hover:text-foreground"
+            className="w-full justify-start p-2 text-muted-foreground hover:text-foreground"
             size="icon"
             onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4" />
-            {!isCollapsed && <span className="ml-2">Logout</span>}
+            {!isCollapsed && <span className="">Logout</span>}
           </Button>
         </div>
       </SidebarContent>

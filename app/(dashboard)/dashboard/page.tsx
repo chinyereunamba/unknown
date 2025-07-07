@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const DashboardPage = () => {
@@ -39,12 +38,6 @@ const DashboardPage = () => {
     },
   ];
 
-  const { data: session } = useSession()
-  const router = useRouter()
-
-  if (!session) {
-    return router.push("/sign-in");
-  }
 
   return (
     <>

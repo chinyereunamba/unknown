@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "WebWhisper ",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Summarise ",
+  description: "Transform lengthy content into actionable insights",
   navItems: [
     {
       label: "Home",
@@ -36,7 +36,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/chinyereunamba/",
+    github: "https://github.com/chinyereunamba/unknown",
     login: "/login",
   },
 };

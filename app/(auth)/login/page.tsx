@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
 
 import AuthForm from "@/components/form";
 
@@ -12,27 +10,7 @@ interface Credentials {
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const router = useRouter();
-  const { data: session, status } = useSession();
 
-  // Redirect if already authenticated
-  if (status === "authenticated") {
-    router.push("/");
-    return null;
-  }
-
-  const handleAuth = async (credentials: Credentials) => {
-    // For now, we'll only support Google OAuth
-    console.log("Email/password auth not implemented yet");
-  };
-
-  const handleGoogleAuth = async () => {
-    try {
-      await signIn("google", { callbackUrl: "/dashboard" });
-    } catch (error) {
-      console.error("Google authentication error:", error);
-    }
-  };
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
@@ -50,8 +28,6 @@ export default function AuthPage() {
             <span className="font-bold text-lg">S</span>
           </div>
           <AuthForm
-            onGoogleAuth={handleGoogleAuth}
-            onSubmit={handleAuth}
             onToggleMode={toggleMode}
           />
         </div>

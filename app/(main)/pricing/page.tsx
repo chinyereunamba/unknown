@@ -1,6 +1,8 @@
+'use client'
 import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function PricingPage() {
   const plans = [
@@ -39,6 +41,8 @@ export default function PricingPage() {
       ],
     },
   ];
+
+  const router = useRouter()
 
   return (
     <div
@@ -89,7 +93,7 @@ export default function PricingPage() {
                 </ul>
               </div>
 
-              <Button className={`w-full ${plan.popular ? "btn-primary" : ""}`}>
+              <Button className={`w-full ${plan.popular ? "btn-primary" : ""}`} onClick={()=>router.push('/login')}>
                 Get Started
               </Button>
             </Card>

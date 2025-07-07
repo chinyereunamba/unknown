@@ -4,10 +4,8 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
-import { authOptions } from "@/lib/auth";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
   title: {
@@ -31,8 +29,8 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
-  const session = await getServerSession(authOptions);
+  }) {
+  
   
   return (
     <html suppressHydrationWarning lang="en">
@@ -40,7 +38,6 @@ export default async function RootLayout({
       <body className={clsx("font-sans antialiased", fontSans.variable)}>
         <Providers
           themeProps={{ attribute: "class", defaultTheme: "system" }}
-          session={session}
         >
           <div className="">{children}</div>
         </Providers>

@@ -12,7 +12,7 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "@/lib/auth-client";
 
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
@@ -28,13 +28,17 @@ import {
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Label } from "./ui/label";
 import { TranslatedText } from "./TranslatedText";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export const Navbar = () => {
   const { language, setLanguage } = useLanguage();
-  const { data: session, status } = useSession();
+  const router = useRouter();
+  const {data: session} = authClient.useSession()
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
+    signOut();
+    return router.push("/");
   };
 
   return (
@@ -42,8 +46,8 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">Whisper</p>
+            {/* <Logo /> */}
+            <p className="font-bold text-inherit">Summarise</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -75,7 +79,7 @@ export const Navbar = () => {
           </Link>
         </NavbarItem>
 
-        {status === "authenticated" ? (
+        {session ? (
           <NavbarItem className="hidden md:flex">
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">
@@ -149,7 +153,7 @@ export const Navbar = () => {
             </NavbarMenuItem>
           ))}
 
-          {status === "authenticated" ? (
+          {session ? (
             <NavbarMenuItem>
               <Button variant="outline" size="lg" onClick={handleSignOut}>
                 <TranslatedText>Sign Out</TranslatedText>

@@ -11,7 +11,7 @@ const Footer = () => {
                 S
               </span>
             </div>
-            <span className="text-sm text-muted-foreground">SummaryAI</span>
+            <span className="text-sm text-muted-foreground">Summarise</span>
           </div>
 
           <div className="flex items-center space-x-6 text-sm text-muted-foreground">
@@ -37,7 +37,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-4 pt-4 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} SummaryAI. All rights reserved.
+          © {new Date().getFullYear()} Summarise. All rights reserved.
         </div>
       </div>
     </footer>

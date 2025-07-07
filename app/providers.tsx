@@ -15,7 +15,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
-  session?: Session | null;
+  // session?: Session | null;
 }
 
 declare module "@react-types/shared" {
@@ -26,11 +26,11 @@ declare module "@react-types/shared" {
   }
 }
 
-export function Providers({ children, themeProps, session }: ProvidersProps) {
+export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <SessionProvider session={session}>
+    // <SessionProvider session={session}>
       <HeroUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>
           <LanguageProvider>
@@ -42,6 +42,6 @@ export function Providers({ children, themeProps, session }: ProvidersProps) {
           </LanguageProvider>
         </NextThemesProvider>
       </HeroUIProvider>
-    </SessionProvider>
+    // </SessionProvider>
   );
 }
