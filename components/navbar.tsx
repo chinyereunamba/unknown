@@ -12,6 +12,7 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { useSession, signOut } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
@@ -25,9 +26,16 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Label } from "./ui/label";
+import { TranslatedText } from "./TranslatedText";
 
 export const Navbar = () => {
   const { language, setLanguage } = useLanguage();
+  const { data: session, status } = useSession();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
 
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
@@ -49,7 +57,7 @@ export const Navbar = () => {
                 color="foreground"
                 href={item.href}
               >
-                {item.label}
+                <TranslatedText>{item.label}</TranslatedText>
               </NextLink>
             </NavbarItem>
           ))}
@@ -66,37 +74,47 @@ export const Navbar = () => {
             <GithubIcon className="text-default-500" />
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          {/* {session ? (
-            <div>
-              <p>{session?.user.name}</p>
-              <Button className="text-sm font-normal" variant={"secondary"}>
-                Dashboard
+
+        {status === "authenticated" ? (
+          <NavbarItem className="hidden md:flex">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                {session?.user?.name || session?.user?.email}
+              </span>
+              <Button
+                className="text-sm font-normal"
+                variant="outline"
+                onClick={handleSignOut}
+              >
+                <TranslatedText>Sign Out</TranslatedText>
               </Button>
             </div>
-          ) : (
+          </NavbarItem>
+        ) : (
+          <NavbarItem className="hidden md:flex">
             <Button asChild className="text-sm font-normal" variant="default">
-              <Link href={siteConfig.links.login}>Get started</Link>
+              <Link href="/login">
+                <TranslatedText>Get started</TranslatedText>
+              </Link>
             </Button>
-          )}*/}
-          <Button asChild className="text-sm font-normal" variant="default">
-            <Link href={siteConfig.links.login}>Get started</Link>
-          </Button>
-        </NavbarItem>
+          </NavbarItem>
+        )}
 
         <NavbarItem>
           <div className="flex gap-4 items-center">
-            <Select>
+            <Select value={language} onValueChange={setLanguage}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Language" />
+                <SelectValue
+                  placeholder={<TranslatedText>Language</TranslatedText>}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
                 <SelectItem value="es">Spanish</SelectItem>
                 <SelectItem value="fr">French</SelectItem>
-                <SelectItem value="german">German</SelectItem>
-                <SelectItem value="italian">Italian</SelectItem>
-                <SelectItem value="portuguese">Portuguese</SelectItem>
+                <SelectItem value="de">German</SelectItem>
+                <SelectItem value="it">Italian</SelectItem>
+                <SelectItem value="pt">Portuguese</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -126,10 +144,49 @@ export const Navbar = () => {
                 href={item.href}
                 size="lg"
               >
-                {item.label}
+                <TranslatedText>{item.label}</TranslatedText>
               </Link>
             </NavbarMenuItem>
           ))}
+
+          {status === "authenticated" ? (
+            <NavbarMenuItem>
+              <Button variant="outline" size="lg" onClick={handleSignOut}>
+                <TranslatedText>Sign Out</TranslatedText>
+              </Button>
+            </NavbarMenuItem>
+          ) : (
+            <NavbarMenuItem>
+              <Button asChild size="lg">
+                <Link href="/login">
+                  <TranslatedText>Get started</TranslatedText>
+                </Link>
+              </Button>
+            </NavbarMenuItem>
+          )}
+
+          <NavbarMenuItem>
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm font-medium">
+                <TranslatedText>Language</TranslatedText>
+              </Label>
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={<TranslatedText>Language</TranslatedText>}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="es">Spanish</SelectItem>
+                  <SelectItem value="fr">French</SelectItem>
+                  <SelectItem value="de">German</SelectItem>
+                  <SelectItem value="it">Italian</SelectItem>
+                  <SelectItem value="pt">Portuguese</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </NavbarMenuItem>
         </div>
       </NavbarMenu>
     </HeroUINavbar>

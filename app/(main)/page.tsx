@@ -7,6 +7,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { TranslatedText } from "@/components/TranslatedText";
+import { useBlockTranslation } from "@/hooks/useBlockTranslation";
 
 type InputMode = "url" | "file";
 
@@ -138,6 +140,30 @@ export default function Home() {
     },
   ];
 
+  // Gather all static text for translation
+  const blockText = [
+    "Transform lengthy content into",
+    "actionable insights",
+    "AI-powered summarization for documents, web pages, and text. Save time and focus on what matters most.",
+    "Try for Free",
+    "Watch Demo",
+    "Everything you need to summarize smarter",
+    "Powerful AI tools designed for modern productivity",
+    ...features.flatMap((f) => [f.title, f.description]),
+  ].join("\n");
+
+  const translatedBlock = useBlockTranslation("home", blockText);
+  const [
+    heroTitle,
+    heroHighlight,
+    heroDesc,
+    tryForFree,
+    watchDemo,
+    featuresTitle,
+    featuresDesc,
+    ...featureLines
+  ] = translatedBlock.split("\n");
+
   return (
     <>
       {/* Hero Section */}
@@ -158,19 +184,17 @@ export default function Home() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl md:text-6xl font-bold text-center tracking-tight mb-6">
-            Transform lengthy content into{" "}
-            <span className="text-gradient">actionable insights</span>
+            {heroTitle} <span className="text-gradient">{heroHighlight}</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            AI-powered summarization for documents, web pages, and text. Save
-            time and focus on what matters most.
+            {heroDesc}
           </p>
           <div className="flex items-center justify-center gap-4">
             <Button asChild className="shadow-elegant" size="lg">
-              <Link href="/input">Try for Free</Link>
+              <Link href="/input">{tryForFree}</Link>
             </Button>
             <Button size="lg" variant="outline">
-              Watch Demo
+              {watchDemo}
             </Button>
           </div>
         </motion.div>
@@ -185,11 +209,9 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Everything you need to summarize smarter
+            {featuresTitle}
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Powerful AI tools designed for modern productivity
-          </p>
+          <p className="text-xl text-muted-foreground">{featuresDesc}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -204,9 +226,11 @@ export default function Home() {
                 <CardContent className="p-0 text-center">
                   <div className="mb-4 flex justify-center">{feature.icon}</div>
                   <h3 className="text-xl font-semibold mb-3">
-                    {feature.title}
+                    {featureLines[index * 2]}
                   </h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <p className="text-muted-foreground">
+                    {featureLines[index * 2 + 1]}
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>

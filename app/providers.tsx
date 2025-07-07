@@ -1,18 +1,21 @@
 "use client";
 
 import type { ThemeProviderProps } from "next-themes";
+import { Session } from "next-auth";
 
 import { AutumnProvider } from "autumn-js/react";
 import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { SessionProvider } from "next-auth/react";
 
-import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
+  session?: Session | null;
 }
 
 declare module "@react-types/shared" {
@@ -23,18 +26,22 @@ declare module "@react-types/shared" {
   }
 }
 
-export function Providers({ children, themeProps }: ProvidersProps) {
+export function Providers({ children, themeProps, session }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <HeroUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>
-          <AutumnProvider
-            backendUrl={process.env.NEXT_PUBLIC_AUTUMN_BACKEND_URL}
-          >
-            {children}
-          </AutumnProvider>
-      </NextThemesProvider>
-    </HeroUIProvider>
+    <SessionProvider session={session}>
+      <HeroUIProvider navigate={router.push}>
+        <NextThemesProvider {...themeProps}>
+          <LanguageProvider>
+            <AutumnProvider
+              backendUrl={process.env.NEXT_PUBLIC_AUTUMN_BACKEND_URL}
+            >
+              {children}
+            </AutumnProvider>
+          </LanguageProvider>
+        </NextThemesProvider>
+      </HeroUIProvider>
+    </SessionProvider>
   );
 }

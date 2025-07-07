@@ -2,16 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { lingo } from "@/lib/lingo";
 
 export async function POST(req: NextRequest) {
-  const { text, targetLocale, sourceLocale = null } = await req.json();
+  const {
+    text,
+    targetLocale,
+    targetLanguage,
+    sourceLocale = null,
+  } = await req.json();
 
-  if (!text || !targetLocale) {
+  const targetLang = targetLocale || targetLanguage;
+
+  if (!text || !targetLang) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
   try {
     const result = await lingo.localizeText(text, {
       sourceLocale,
-      targetLocale,
+      targetLocale: targetLang,
     });
 
     return NextResponse.json({ translatedText: result });

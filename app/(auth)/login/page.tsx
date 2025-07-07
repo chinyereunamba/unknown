@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 import AuthForm from "@/components/form";
 
@@ -12,22 +13,22 @@ interface Credentials {
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if already authenticated
+  if (status === "authenticated") {
+    router.push("/");
+    return null;
+  }
 
   const handleAuth = async (credentials: Credentials) => {
-    // Simulate authentication
-    console.log("Authentication with:", credentials);
-
-    // In a real app, you would call your authentication API here
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Redirect to home page after successful authentication
-    router.push("/");
+    // For now, we'll only support Google OAuth
+    console.log("Email/password auth not implemented yet");
   };
 
   const handleGoogleAuth = async () => {
     try {
-      // Redirect to Better Auth's Google sign-in
-      window.location.href = "/api/auth/signin/google";
+      await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
       console.error("Google authentication error:", error);
     }

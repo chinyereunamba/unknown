@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
-
-import { Button, Card } from "@/components/";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function PricingPage() {
   const plans = [

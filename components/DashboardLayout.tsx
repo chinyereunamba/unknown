@@ -24,7 +24,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
+import { signOut, useSession } from "next-auth/react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -43,11 +43,11 @@ const DashboardSidebar = () => {
   const router = useRouter();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSession();
 
   const handleSignOut = async () => {
     try {
-      await authClient.signOut();
+      await signOut();
       router.push("/login");
     } catch (error) {
       console.error("Sign out error:", error);

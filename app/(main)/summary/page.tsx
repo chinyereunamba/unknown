@@ -37,6 +37,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
+import { TranslatedText } from "@/components/TranslatedText";
 
 interface SummaryData {
   summary: string;
@@ -52,7 +53,7 @@ export default function SummaryPage() {
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
 
   const [isOriginalOpen, setIsOriginalOpen] = useState(false);
-  const [targetLanguage, setTargetLanguage] = useState("spanish");
+  const [targetLanguage, setTargetLanguage] = useState("es");
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState<LoadingStep>("initializing");
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -319,7 +320,7 @@ export default function SummaryPage() {
                 ⚠️
               </motion.div>
               <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-                Summarization Failed
+                <TranslatedText>Summarization Failed</TranslatedText>
               </h2>
               <p className="text-muted-foreground mb-6">{error}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -328,14 +329,14 @@ export default function SummaryPage() {
                   onClick={() => summarizeText(extractedText)}
                 >
                   <Loader2 className="w-4 h-4 mr-2" />
-                  Try Again
+                  <TranslatedText>Try Again</TranslatedText>
                 </Button>
                 <Button
                   className="font-semibold"
                   variant="outline"
                   onClick={() => router.push("/")}
                 >
-                  Start Over
+                  <TranslatedText>Start Over</TranslatedText>
                 </Button>
               </div>
             </CardContent>
@@ -356,17 +357,24 @@ export default function SummaryPage() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="font-extrabold text-4xl md:text-5xl mb-2">
-            Here&apos;s Your Summary
+            <TranslatedText>Here's Your Summary</TranslatedText>
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            We&apos;ve simplified the content for you—see the key points below.
+            <TranslatedText>
+              We've simplified the content for you—see the key points below.
+            </TranslatedText>
           </p>
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold mb-2">
-              Summary <span className="text-gradient">Generated</span>
+              <TranslatedText>Summary</TranslatedText>{" "}
+              <span className="text-gradient">
+                <TranslatedText>Generated</TranslatedText>
+              </span>
             </h1>
             <p className="text-muted-foreground">
-              Your document has been successfully summarized
+              <TranslatedText>
+                Your document has been successfully summarized
+              </TranslatedText>
             </p>
           </div>
 
@@ -384,7 +392,7 @@ export default function SummaryPage() {
                     {summaryData.originalLength.toLocaleString()}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Original Words
+                    <TranslatedText>Original Words</TranslatedText>
                   </div>
                 </CardContent>
               </Card>
@@ -394,18 +402,22 @@ export default function SummaryPage() {
                     {summaryData.summaryLength.toLocaleString()}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Summary Words
+                    <TranslatedText>Summary Words</TranslatedText>
                   </div>
                 </CardContent>
               </Card>
-              {summaryData.reductionPercentage > 0 &&<Card className="text-center shadow-soft">
-                <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-green-600">
-                    {summaryData.reductionPercentage}%
-                  </div>
-                  <div className="text-sm text-muted-foreground">Reduction</div>
-                </CardContent>
-              </Card>}
+              {summaryData.reductionPercentage > 0 && (
+                <Card className="text-center shadow-soft">
+                  <CardContent className="p-4">
+                    <div className="text-2xl font-bold text-green-600">
+                      {summaryData.reductionPercentage}%
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      <TranslatedText>Reduction</TranslatedText>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               <Card className="text-center shadow-soft">
                 <CardContent className="p-4">
                   <div className="text-2xl font-bold text-primary">
@@ -413,7 +425,7 @@ export default function SummaryPage() {
                     {/* TODO: Calculate reading time */}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Reading Time
+                    <TranslatedText>Reading Time</TranslatedText>
                   </div>
                 </CardContent>
               </Card>
@@ -432,11 +444,17 @@ export default function SummaryPage() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="w-5 h-5 text-primary" />
-                  <span>AI-Generated Summary</span>
-                  <Badge className="ml-auto">Ready</Badge>
+                  <span>
+                    <TranslatedText>AI-Generated Summary</TranslatedText>
+                  </span>
+                  <Badge className="ml-auto">
+                    <TranslatedText>Ready</TranslatedText>
+                  </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Condensed version highlighting the key points
+                  <TranslatedText>
+                    Condensed version highlighting the key points
+                  </TranslatedText>
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -457,17 +475,23 @@ export default function SummaryPage() {
                       onValueChange={setTargetLanguage}
                     >
                       <SelectTrigger className="flex-1">
-                        <SelectValue placeholder="Translate to..." />
+                        <SelectValue
+                          placeholder={
+                            <TranslatedText>Translate to...</TranslatedText>
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="spanish">Spanish</SelectItem>
-                        <SelectItem value="french">French</SelectItem>
-                        <SelectItem value="german">German</SelectItem>
-                        <SelectItem value="italian">Italian</SelectItem>
-                        <SelectItem value="portuguese">Portuguese</SelectItem>
+                        <SelectItem value="es">Spanish</SelectItem>
+                        <SelectItem value="fr">French</SelectItem>
+                        <SelectItem value="de">German</SelectItem>
+                        <SelectItem value="it">Italian</SelectItem>
+                        <SelectItem value="pt">Portuguese</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Button variant="outline">Translate</Button>
+                    <Button variant="outline">
+                      <TranslatedText>Translate</TranslatedText>
+                    </Button>
                   </div>
 
                   <div className="flex space-x-2">
@@ -478,14 +502,16 @@ export default function SummaryPage() {
                       onClick={copyToClipboard}
                     >
                       {copied ? (
-                        <span className="text-sm font-semibold">Copied!</span>
+                        <span className="text-sm font-semibold">
+                          <TranslatedText>Copied!</TranslatedText>
+                        </span>
                       ) : (
                         <Copy size={20} />
                       )}
                     </Button>
                     <Button variant="outline">
                       <Download className="w-4 h-4 mr-2" />
-                      Download
+                      <TranslatedText>Download</TranslatedText>
                     </Button>
                   </div>
                 </div>
@@ -510,14 +536,18 @@ export default function SummaryPage() {
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <FileText className="w-5 h-5" />
-                        <span>Original Text</span>
+                        <span>
+                          <TranslatedText>Original Text</TranslatedText>
+                        </span>
                       </div>
                       <ChevronDown
                         className={`w-5 h-5 transition-transform ${isOriginalOpen ? "rotate-180" : ""}`}
                       />
                     </CardTitle>
                     <CardDescription>
-                      Click to view the original document content
+                      <TranslatedText>
+                        Click to view the original document content
+                      </TranslatedText>
                     </CardDescription>
                   </CardHeader>
                 </CollapsibleTrigger>
@@ -527,21 +557,21 @@ export default function SummaryPage() {
                       {extractedText.slice(0, 300)}
                       {extractedText.length > 300 && (
                         <span className="text-muted-foreground">
-                          ... (truncated)
-              </span>
+                          <TranslatedText>... (truncated)</TranslatedText>
+                        </span>
                       )}
-            </div>
+                    </div>
                   </CardContent>
                 </CollapsibleContent>
               </Collapsible>
-          </Card>
+            </Card>
           </motion.div>
 
           {/* Action Steps Card */}
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-center">
-                What would you like to do next?
+                <TranslatedText>What would you like to do next?</TranslatedText>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -550,15 +580,15 @@ export default function SummaryPage() {
                   className="font-semibold"
                   onClick={() => router.push("/input")}
                 >
-                  Create New Summary
+                  <TranslatedText>Create New Summary</TranslatedText>
                 </Button>
                 <Button className="font-semibold" variant="outline">
-                  Save Summary
+                  <TranslatedText>Save Summary</TranslatedText>
                 </Button>
                 <Button className="font-semibold" variant="outline">
-                  Share Summary
+                  <TranslatedText>Share Summary</TranslatedText>
                 </Button>
-            </div>
+              </div>
             </CardContent>
           </Card>
         </motion.div>

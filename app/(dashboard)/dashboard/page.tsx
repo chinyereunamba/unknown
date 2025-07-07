@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const DashboardPage = async () => {
   const stats = [
@@ -37,13 +39,11 @@ const DashboardPage = async () => {
     },
   ];
 
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // });
+  const { data: session } = useSession()
 
-  // if (!session) {
-  //   redirect("/sign-in");
-  // }
+  if (!session) {
+    return redirect("/sign-in");
+  }
 
   return (
     <>

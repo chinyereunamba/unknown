@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Check, Crown, Zap } from "lucide-react";
-
+import { useCustomer } from "autumn-js/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -58,6 +58,8 @@ const BillingPage = () => {
       popular: false,
     },
   ];
+
+  const { attach } = useCustomer();
 
   return (
     <>
@@ -168,6 +170,9 @@ const BillingPage = () => {
                     <Button
                       className="w-full"
                       disabled={plan.current}
+                      onClick={async () =>
+                        await attach({ productId: plan.name })
+                      }
                       variant={
                         plan.current
                           ? "secondary"

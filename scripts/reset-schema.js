@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * NextAuth.js Database Schema Generator for Supabase
- * This script creates the required tables for NextAuth.js in your Supabase database
+ * NextAuth.js Database Schema Reset for Supabase
+ * This script drops existing tables and creates the required tables for NextAuth.js
  */
 
 const { Pool } = require("pg");
@@ -22,16 +22,25 @@ const pool = new Pool({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : false,
-  // Force IPv4 connections to avoid ENETUNREACH errors
   connectionTimeoutMillis: 10000,
   idleTimeoutMillis: 30000,
   max: 20,
-  // Add these options to force IPv4
   host: connectionString.match(/@([^:]+):/)?.[1] || undefined,
   port: 5432,
 });
 
-const schema = `
+const schemaSQL = `
+-- Drop existing tables in correct order (due to foreign key constraints)
+DROP TABLE IF EXISTS verification_tokens CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS accounts CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+-- Drop triggers and functions
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+DROP TRIGGER IF EXISTS update_accounts_updated_at ON accounts;
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
 -- NextAuth.js Database Schema for Supabase
 -- This creates all the required tables for NextAuth.js with Supabase adapter
 
@@ -100,16 +109,14 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-DROP TRIGGER IF EXISTS update_accounts_updated_at ON accounts;
 CREATE TRIGGER update_accounts_updated_at BEFORE UPDATE ON accounts
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 `;
 
-async function generateSchema() {
+async function resetDatabaseSchema() {
   try {
     console.log("🔗 Connecting to Supabase database...");
 
@@ -117,12 +124,13 @@ async function generateSchema() {
     const client = await pool.connect();
     console.log("✅ Connected to database successfully");
 
-    console.log("📝 Generating NextAuth.js schema...");
+    console.log("🗑️  Dropping existing tables...");
+    console.log("📝 Creating NextAuth.js schema...");
 
-    // Execute schema
-    await client.query(schema);
+    // Execute schema reset
+    await client.query(schemaSQL);
 
-    console.log("✅ Database schema generated successfully!");
+    console.log("✅ Database schema reset successfully!");
     console.log("");
     console.log("📋 Created tables:");
     console.log("  - users (user accounts)");
@@ -138,7 +146,7 @@ async function generateSchema() {
     client.release();
     await pool.end();
   } catch (error) {
-    console.error("❌ Error generating schema:", error.message);
+    console.error("❌ Error resetting schema:", error.message);
 
     if (error.code === "ECONNREFUSED") {
       console.log(
@@ -157,4 +165,4 @@ async function generateSchema() {
   }
 }
 
-generateSchema();
+resetDatabaseSchema();
