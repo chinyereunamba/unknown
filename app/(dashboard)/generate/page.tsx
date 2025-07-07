@@ -1,18 +1,8 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-
-
 async function generateSummary(text: string): Promise<string> {
   return text.length > 100 ? text.slice(0, 100) + "..." : text;
 }
 
 export default async function GenerateSummaryPage() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
-
 
   return (
     <div>
