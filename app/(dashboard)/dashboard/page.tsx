@@ -14,7 +14,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const DashboardPage = async () => {
+const DashboardPage = () => {
   const stats = [
     {
       title: "Total Summaries",
