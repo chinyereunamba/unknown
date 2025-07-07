@@ -105,7 +105,7 @@ const DashboardSidebar = () => {
 
         {/* Logout */}
         <div className="mt-auto p-4 border-t">
-          {session?.user.name}
+          {session?.user?.name || "no name"}
           <Button
             className="w-full justify-start text-muted-foreground hover:text-foreground"
             size="icon"

@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const DashboardPage = async () => {
   const stats = [
@@ -40,9 +40,10 @@ const DashboardPage = async () => {
   ];
 
   const { data: session } = useSession()
+  const router = useRouter()
 
   if (!session) {
-    return redirect("/sign-in");
+    return router.push("/sign-in");
   }
 
   return (
